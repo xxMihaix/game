@@ -1,0 +1,165 @@
+
+const express = require('express');
+const mongoose = require('mongoose');
+require('dotenv').config();
+const path = require('path');
+const app = express();
+const session = require('express-session');
+const bcrypt = require('bcrypt')
+
+app.use(express.static(path.join(__dirname, 'public_html')));
+app.use(express.static(path.join(__dirname, 'styles')))
+
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {maxAge: 1000 * 60 * 60 * 24 * 7}
+}))
+
+
+mongoose.connect(process.env.MONGO_URI)
+.then(() => {
+    console.log('Conectat');
+})
+.catch((err)=> {
+    console.log('NU e conectat');
+})
+
+app.get('/session', (req, res) => {
+    if(req.session.username){
+        res.json({ succes: true, username: req.session.username});
+    }
+    else{
+        res.json({ succes: false});
+    }
+})
+
+const User = require('./schema.js');
+
+app.post('/register', async (req, res) => {
+    try{
+        const { username, password } = req.body;
+    
+    const existUser = await User.findOne( {username: username});
+
+    if(existUser){
+        return res.status(400).json({ 
+            succes: false, 
+            message: 'Username already exists.'
+        })
+    
+    }else{
+        const hashedPassword = await bcrypt.hash(password, 10)
+
+        await User.create({username: username, password: hashedPassword})
+
+        req.session.username = username;
+
+        return res.status(201).json({ 
+            succes: true, 
+            message: 'Username created succesfuly!.',
+            username: username
+        })
+        
+    }}
+    catch(err){
+        console.log(err);
+         res.status(500).json({ succes: false, message: 'Eroare server' });
+    }
+});
+
+
+app.post('/login', async (req, res) => {
+    try{
+        const { username, password } = req.body;
+
+        const user = await User.findOne({ username });
+
+        if(!user){
+            return res.json({
+                succes: false,
+                message: 'User not found!'
+            })
+        }
+
+        const match = await bcrypt.compare(password, user.password);
+        if(!match) {
+            return res.json({
+                succes: false,
+                message: 'Wrong password!'
+            })
+        }
+
+        req.session.username = user.username;
+
+        res.json({
+            succes: true,
+            message: 'Login succesful!',
+            username: user.username
+        })
+        
+    }
+    catch(err){
+        console.log(err);
+        res.status(500).json({ succes: false, message: 'Server error'});
+    }
+})
+
+app.post('/logout', (req, res) => {
+    req.session.destroy(err=> {
+        if(err){
+            return res.status(500).send('Error at logout')
+        }
+        res.clearCookie('connect.sid');
+        res.json({succes: true})
+    })
+})
+
+
+app.get('/users', async(req, res) => {
+    try{
+        const users = await User.find({}, {password: 0});
+        res.json(users);
+    }
+    catch(err){
+        console.log(err);
+    }
+})
+
+app.get('/usersManagement', async (req, res) => {
+    try{
+        const users = await User.find();
+        res.json(users);
+    }
+    catch(err){
+        console.log(err);
+    }
+})
+
+app.get('/role', async (req, res) => {
+    if(!req.session.username){
+        return res.json({ succes: false });
+    }
+
+    try{
+        const user = await User.findOne({ username: req.session.username });
+
+        if(!user) return res.json({ succes: false });
+
+        res.json({ succes: true, role: user.role });
+
+    }
+    catch(err){
+        res.json({ succes: false });
+    }
+})
+
+app.listen(3000, () => {
+    console.log(`Server-ul ruleaza la portul: 3000`);
+});
+

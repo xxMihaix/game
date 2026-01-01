@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/index.css">
+    <script src="loadusers.js" defer></script>
+    <script src="createLogin.js" defer></script>
+</head>
+
+<body>
+    <div class="navbar">You aren't Logged In</div>
+
+    <div class="position-create-table">
+
+        <div class="create-user-container">
+            <p class="title">Create user:</p>
+            <form action="/register" method="POST" id="register">
+
+                <input class="input" type="text" name="username" id="username"  minlength="6" maxlength="20" required placeholder="Username"><br>
+                <input class="input" type="password" name="password" id="password" minlength="6" maxlength="50" required placeholder="Password"><br>
+                <p id="user-exist"></p>
+
+                <button class="create-btn" type="submit">Create</button>
+            </form>
+            <p class="gologin">Have an account?<button>Log In</button></p>
+        </div>
+
+        <div class="login-user-container">
+            <p class="title">Log In:</p>
+            <form action="/login" method="POST" id="login">
+
+                <input class="input" type="text" name="username" id="username2" required placeholder="Username"><br>
+                <input class="input" type="password" name="password" id="password2" required placeholder="Password"><br>
+                <p id="error-login"></p>
+
+                <button class="create-btn" type="submit">Log In</button>
+            </form>
+            <p class="gocreate">Create an account?<button>Create</button></p>
+        </div>
+
+        <div class="welcome-user-container">
+            <p id="welcome">You aren't Logged In</p>
+
+            
+            <button type="submit" class="admin-btn">Admin Control -></button>
+            
+
+            <form action="/logout" method="POST">
+                <button type="submit" class="logout">Logout -></button>
+            </form>
+
+        </div>
+
+        <div class="users-table-container">
+            <p class="title">Our Players and Staff:</p>
+
+            <div class="all-table-container">
+                <div class="top-table">
+                    <div>Nr</div>
+                    <div>Username</div>
+                    <div>Role</div>
+                </div>
+                <div class="table-container">
+                
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>
