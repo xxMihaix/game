@@ -1,4 +1,15 @@
 
+function goback(){
+    const btn = document.querySelector('.goback');
+
+    btn.addEventListener('click', () => {
+        window.location.href = '/';
+    })
+}
+
+goback();
+
+
 function opSearch(){
     const showBtn = document.querySelector('.selected-option');
     const contOp = document.querySelector('.options');
@@ -6,6 +17,7 @@ function opSearch(){
 
     const op1 = document.getElementById('op1');
     const op2 = document.getElementById('op2');
+    const op3 = document.getElementById('op3');
 
     showBtn.addEventListener('click', () => {
         contOp.classList.toggle('active')
@@ -19,6 +31,10 @@ function opSearch(){
 
     op2.addEventListener('click', () => {
         selected.textContent = 'Role';
+    })
+
+    op3.addEventListener('click', () => {
+        selected.textContent = 'Money';
     })
 }
 
@@ -78,6 +94,7 @@ async function listUsers(){
                 <div class="crt">${ctr}</div>
                 <div class="username">${user.username}</div>
                 <div class="password-container"><div class="password">${user.password}</div><button class="copy">Copy</button></div>
+                <div class="money">Loading...</div>
                 <div class="role">${user.role}</div>
                 <div class="manage"><button class="modify">Modify</button></div>
             </div>`;
@@ -109,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 document.addEventListener('DOMContentLoaded', function(){
-    navWelcome();
-    protectPage();
+    //navWelcome();
+    //protectPage();
 })
 
