@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 document.addEventListener('DOMContentLoaded', function(){
-    //navWelcome();
-    //protectPage();
+    navWelcome();
+    protectPage();
 })
 
