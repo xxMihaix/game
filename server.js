@@ -8,7 +8,8 @@ const session = require('express-session');
 const bcrypt = require('bcrypt')
 
 app.use(express.static(path.join(__dirname, 'public_html')));
-app.use(express.static(path.join(__dirname, 'styles')))
+app.use(express.static(path.join(__dirname, 'styles')));
+app.use(express.static(path.join(__dirname, 'images')));
 
 
 app.use(express.json());

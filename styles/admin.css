@@ -10,11 +10,17 @@
 html, body{
     height: 100%;
     width: 100%;
+    margin: 0px;
+    overflow: hidden;
 }
 
 body{
     gap: 30px;
     background-color: #E8F5E9;
+    background-image: url(../images/bg.jpg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
 }
 
 /**************** Navigation Bar ********************/
@@ -30,30 +36,65 @@ body{
     align-items: center;
     text-align: center;
     z-index: 10;
-    border-bottom: 3px solid white;
 
     color: white;
     font-weight: bold;
     font-size: 23px;
 }
 
+.inv-nav{
+    width: 100%;
+    height: 55px;
+}
+
+.goback-container{
+    position: absolute;
+    top: 45px;
+    padding: 15px;
+}
+
+@media(max-width: 900px){
+    .goback-container{
+        top: 50px;
+    }
+}
+
+@media(max-width: 900px){
+    .goback-container{
+        padding: 10px;
+    }
+}
+
+.goback{
+    border: 3px solid #ffffff;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 18px;
+    padding: 2px 25px;
+    border-radius: 15px;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+
 /***************** Top Table ********************/
 
 .top-table-container{
     width: 100%;
-    padding: 0px 5%;
-    padding-top: 100px;
-}
-
-@media(max-width: 580px){
-    .top-table-container{
-        padding: 0px 1%;
-        padding-top: 100px;
-    }
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    top: 100px;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    padding: 0px;
+    gap: 0;   
 }
 
 .top-table{
-    width: 100%;
+    min-width: 850px;
     background-color: #2E7D32;
     height: 50px;
     padding: 0px 2%;
@@ -67,12 +108,6 @@ body{
     font-weight: bold;
     font-size: 20px;
     color: white;
-}
-
-@media(max-width: 890px){
-    .welcome{
-        display: none;
-    }
 }
 
 /*********************/
@@ -89,12 +124,6 @@ body{
     font-weight: bold;
     font-size: 20px;
     color: white;
-}
-
-@media(max-width: 600px){
-    .search-by{
-        display: none;
-    }
 }
 
 .selected-option{
@@ -124,7 +153,7 @@ body{
 }
 
 .options.active{
-    max-height: 100px;
+    max-height: 150px;
     transition: 0.3s;
 }
 
@@ -156,8 +185,8 @@ body{
 /************ Table **************/
 
 .users-list{
-    width: 100%;;
-    height: 80vh;
+    min-width: 850px;
+    overflow-x: auto;
 
     display: flex;
     justify-content: center;
@@ -173,16 +202,16 @@ body{
     align-items: center;
     background-color: #308f35;
     width: 100%;
+    padding: 0px 2%;
 }
 
-.usernameT, .passwordT, .roleT, .manageT{
+.usernameT, .passwordT, .roleT, .moneyT, .manageT{
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
     font-weight: bold;
-    width: 23%;
 }
 
 .crtT{
@@ -192,15 +221,25 @@ body{
     justify-content: center;
     color: white;
     font-weight: bold;
-    width: 8%;
 }
 
 /*****/
 
 .list{
     width: 100%;
+    height: 100%;
     overflow-y: auto;
 }
+
+.list::-webkit-scrollbar {
+    width: 10px;
+}
+
+.list{
+    scrollbar-width: thin;
+    scrollbar-color:#196408 #2E7D32;
+}
+
 
 .list-el{
     width: 100%;
@@ -209,9 +248,10 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 0px 2%;
 }
 
-.username, .password-container, .role, .manage{
+.username, .password-container, .money, .role, .manage{
     border: 2px solid rgb(255, 255, 255);
     height: 100%;
     display: flex;
@@ -219,7 +259,30 @@ body{
     justify-content: center;
     color: white;
     font-weight: bold;
+}
+
+.crtT, .crt{
+    width: 8%;
+}
+
+.usernameT, .username{
+    width: 26%;
+}
+
+.passwordT, .password-container{
+    width: 21%;
+}
+
+.moneyT, .money{
     width: 23%;
+}
+
+.roleT, .role{
+    width: 17%;
+}
+
+.manageT, .manage{
+    width: 15%;
 }
 
 .username{
@@ -260,7 +323,6 @@ body{
     justify-content: center;
     color: white;
     font-weight: bold;
-    width: 8%;
 }
 
 @media(max-width: 800px){
@@ -268,7 +330,7 @@ body{
         border: 1px solid rgb(255, 255, 255);
     }
 
-    .username, .password-container, .role, .manage{
+    .username, .password-container, .money, .role, .manage{
     border: 1px solid rgb(255, 255, 255);
     }
 }
@@ -282,15 +344,4 @@ body{
     border-radius: 7px;
     padding: 3px 15px;
     cursor: pointer;
-}
-
-@media(max-width: 425px){
-    .password{
-        display: none;
-        width: 0px;
-    }
-
-    .modify{
-        padding: 2px 5px;
-    }
 }
