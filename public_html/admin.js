@@ -1,4 +1,9 @@
 
+document.addEventListener('DOMContentLoaded', function(){
+    navWelcome();
+    protectPage();
+})
+
 function goback(){
     const btn = document.querySelector('.goback');
 
@@ -39,6 +44,36 @@ function opSearch(){
 
 opSearch();
 
+document.addEventListener('DOMContentLoaded', () => {
+    const search = document.getElementById('search');
+
+    search.addEventListener('input', () => {
+        searchList();
+    })
+})
+
+async function searchList() {
+    const res = await fetch('/usersManagement');
+    const data = await res.json();
+
+    const selected = document.querySelector('.selected').textContent;
+    const searchValue = document.getElementById('search').value.trim().toLowerCase();
+    
+    const filtered = data.filter(user => {
+        if (selected === 'Username') {
+            return user.username.toLowerCase().includes(searchValue);
+        }
+        else if (selected === 'Role') {
+            return user.role.toLowerCase().includes(searchValue);
+        }
+        else if (selected === 'Money') {
+            console.log('Comming soon');
+        }
+    });
+
+    listUsers(filtered, searchValue);
+}
+
 
 async function navWelcome(){
     res = await fetch('/session');
@@ -77,12 +112,21 @@ async function protectPage(){
     }
 }
 
-async function listUsers(){
+async function startList(){
     res = await fetch('/usersManagement');
     data = await res.json();
 
+    return listUsers(data);
+}
+
+startList();
+
+async function listUsers(data, searchValue){
+
     const listCont = document.querySelector('.list');
     listCont.innerHTML = ``;
+
+    if(data.length > 0){
 
     let ctr = 0;
     data.forEach(user => {
@@ -113,9 +157,16 @@ async function listUsers(){
 
     submenu();
     copy();
-}
+    }
+    else {
+    const el = `<div class="dont-exist">Can't find: ${searchValue}</div>`;
+    listCont.innerHTML += el;
 
-listUsers();
+    const dontExist = document.querySelector('.dont-exist');
+
+    dontExist.style.display = 'flex';
+}
+}
 
 function copy(){
     const copybtn = document.querySelectorAll('.copy');
@@ -151,6 +202,7 @@ function submenu(){
 
 submenu();
 
+/*
 document.addEventListener('DOMContentLoaded', () => {
 
     const width = window.innerWidth;
@@ -170,9 +222,4 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('modify');
     }
 })
-
-document.addEventListener('DOMContentLoaded', function(){
-    navWelcome();
-    protectPage();
-})
-
+*/

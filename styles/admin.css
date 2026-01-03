@@ -393,3 +393,17 @@ body{
     background-color:#2E7D32;
     color: #ffffff;
 }
+
+.dont-exist{
+    display: none;
+    color: white;
+    font-weight: bold;
+    font-size: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    height: 100%;
+    width: 100%;
+    padding: 0px 2%;
+}
