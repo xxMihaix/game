@@ -128,7 +128,8 @@ async function navWelcome(){
 function logout(){
     const button = document.querySelector('.logout');
 
-    button.addEventListener('click', async () => {
+    button.addEventListener('click', async (e) => {
+        e.preventDefault();
         try{
             const res = await fetch('/logout', {
                 method: 'POST',

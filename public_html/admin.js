@@ -9,7 +9,6 @@ function goback(){
 
 goback();
 
-
 function opSearch(){
     const showBtn = document.querySelector('.selected-option');
     const contOp = document.querySelector('.options');
@@ -90,20 +89,67 @@ async function listUsers(){
     ctr++;
 
     const el = `
-            <div class="list-el">
+        <div class="list-el">
+            <div class="content">
                 <div class="crt">${ctr}</div>
                 <div class="username">${user.username}</div>
-                <div class="password-container"><div class="password">${user.password}</div><button class="copy">Copy</button></div>
-                <div class="money">Loading...</div>
+                <div class="password-container">
+                    <div class="password">${user.password}</div><button class="copy">Copy</button>
+                </div>
+                <div class="money">Soon...</div>
                 <div class="role">${user.role}</div>
-                <div class="manage"><button class="modify">Modify</button></div>
-            </div>`;
+                <div class="manage">
+                    <button class="modify">Edit</button>
+                </div>
+            </div>
+            <!-- Submenu -->
+            <div class="submenu">
+                <div class="soon">Edit Coming Soon..</div>
+            </div>
+        </div>`;
 
     listCont.innerHTML += el;
     })
+
+    submenu();
+    copy();
 }
 
 listUsers();
+
+function copy(){
+    const copybtn = document.querySelectorAll('.copy');
+    
+    copybtn.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const contDiv = btn.closest('.password-container');
+            const contText = contDiv.querySelector('.password').textContent;
+            
+            navigator.clipboard.writeText(contText)
+        })
+    })
+}
+
+function submenu(){
+    const btn = document.querySelectorAll('.modify');
+
+    btn.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const listEl = btn.closest('.list-el');
+            const current = listEl.querySelector('.submenu');
+
+            document.querySelectorAll('.submenu').forEach(sub => {
+                if(sub !== current){
+                    sub.classList.remove('active');
+                }
+            })
+
+            current.classList.toggle('active');
+    })
+    })
+}
+
+submenu();
 
 document.addEventListener('DOMContentLoaded', () => {
 

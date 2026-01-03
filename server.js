@@ -89,7 +89,7 @@ app.post('/login', async (req, res) => {
         }
 
         const match = await bcrypt.compare(password, user.password);
-        if(!match) {
+        if(!match && !user.password) {
             return res.json({
                 succes: false,
                 message: 'Wrong password!'
