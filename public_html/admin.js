@@ -133,7 +133,7 @@ async function listUsers(data, searchValue){
     ctr++;
 
     const el = `
-        <div class="list-el">
+        <div class="list-el" data-id="${user._id}" id='user-${user._id}'>
             <div class="content">
                 <div class="crt">${ctr}</div>
                 <div class="username">${user.username}</div>
@@ -141,14 +141,26 @@ async function listUsers(data, searchValue){
                     <div class="password">${user.password}</div><button class="copy">Copy</button>
                 </div>
                 <div class="money">Soon...</div>
-                <div class="role">${user.role}</div>
+                <div class="role">${user.role.charAt(0).toUpperCase() + user.role.slice(1).toLowerCase()}</div>
                 <div class="manage">
                     <button class="modify">Edit</button>
                 </div>
             </div>
             <!-- Submenu -->
             <div class="submenu">
-                <div class="soon">Edit Coming Soon..</div>
+                <div class="sub">
+                    <div class="role-pick">
+                        <div class="role-by">Role:</div>
+                        
+                            <p class="selected-role">${user.role.charAt(0).toUpperCase() + user.role.slice(1).toLowerCase()}</p>
+                            <div class="role-options">
+                                <div id="opr1" class="opr1 optionr">Admin</div>
+                                <div id="opr2" class="opr2 optionr">Player</div>
+                            </div>
+                        
+                        <div class='balance-role'></div>
+                    </div>
+                <button class="delete-user" data-id="${user._id}">Delete User</button>
             </div>
         </div>`;
 
@@ -157,6 +169,9 @@ async function listUsers(data, searchValue){
 
     submenu();
     copy();
+    deleteUser();
+    roleManage();
+    roleText();
     }
     else {
     const el = `<div class="dont-exist">Can't find: ${searchValue}</div>`;
@@ -166,6 +181,67 @@ async function listUsers(data, searchValue){
 
     dontExist.style.display = 'flex';
 }
+}
+
+async function deleteUser(){
+    const delMenu = document.querySelector('.menu-delete');
+    const no = document.querySelector('.no');
+    const yes = document.querySelector('.yes');
+
+    const deleteBtns = document.querySelectorAll('.delete-user');
+    let currentUserId = null;
+
+    deleteBtns.forEach(button => {
+        button.addEventListener('click', () => {
+            currentUserId = button.dataset.id;
+            delMenu.classList.add('active');
+        })
+    })
+
+    no.addEventListener('click', () => {
+        delMenu.classList.remove('active');
+        currentUserId = null;
+        return;
+    })
+
+    yes.addEventListener('click', async () => {
+        delMenu.classList.remove('active');
+
+        if(!currentUserId){
+            return;
+        }
+
+        const resSession = await fetch('/session');
+        const dataSession = await resSession.json();
+
+        const resRole = await fetch('/role');
+        const dataRole = await resRole.json();
+
+        if (dataSession.succes && dataRole.role === 'admin') {
+            try {
+                const res = await fetch(`/users/${currentUserId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (res.ok) {
+                    const userEl = document.getElementById(`user-${currentUserId}`);
+                    if (userEl) {
+                        userEl.remove();
+                    }
+                }
+            }
+            catch (err) {
+                console.log(err);
+                alert('Error deleting user');
+            }
+        }
+        else{
+            alert('You are not authorized to delete this user.');
+        }
+    })
 }
 
 function copy(){
@@ -200,7 +276,142 @@ function submenu(){
     })
 }
 
-submenu();
+async function roleManage(){
+    const btn = document.querySelectorAll('.selected-role');
+
+    btn.forEach(btn => {
+        btn.addEventListener('click', () =>{
+            const src = btn.closest('.role-pick');
+            const menu = src.querySelector('.role-options');
+
+            document.querySelectorAll('.role-options').forEach(el => {
+                if(el !== menu){
+                    el.classList.remove('active');
+                }
+            })
+            menu.classList.toggle('active');
+        })
+    })
+}
+
+function roleText(){
+    const admin = document.querySelectorAll('.opr1');
+    const player = document.querySelectorAll('.opr2');
+
+    async function updateRole(userId, role){
+        
+        try{
+            const res = await fetch('/update-role', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId, role })
+        })
+
+        const data = await res.json(); 
+
+        if(!data.succes){
+            alert('Error at updating role');
+        }
+        }
+        catch(err){
+            console.log(err);
+        }
+    }
+
+    admin.forEach(admin => {
+        admin.addEventListener('click', async () => {
+
+            const sure = document.querySelector('.menu-role');
+            sure.classList.add('active');
+
+            const no = document.querySelector('.no1');
+            const yes = document.querySelector('.yes1');
+
+            no.addEventListener('click', () => {
+                sure.classList.remove('active');
+                return;
+            })
+
+            yes.addEventListener('click', async () => {
+                sure.classList.remove('active');
+
+                const sessionRes = await fetch('/session');
+                const sessionData = await sessionRes.json();
+
+                const roleRes = await fetch('/role');
+                const roleData = await roleRes.json();
+
+                if (sessionData.succes && roleData.role === 'admin') {
+
+                    const container = admin.closest('.role-pick');
+                    const display = container.querySelector('.selected-role');
+                    display.textContent = 'Admin';
+
+                    const menu = admin.closest('.role-options');
+                    menu.classList.remove('active');
+
+                    const userId = admin.closest('.list-el').dataset.id;
+                    updateRole(userId, 'admin');
+
+                    const res = await fetch('/usersManagement');
+                    const data = await res.json();
+
+                    listUsers(data);
+                }
+                else{
+                    alert('You are not authorized to modify this role.')
+                }
+            })
+        })
+    })
+
+    player.forEach(player => {
+        player.addEventListener('click', async () => {
+
+            const sure = document.querySelector('.menu-role');
+            sure.classList.add('active');
+
+            const no = document.querySelector('.no1');
+            const yes = document.querySelector('.yes1');
+
+            no.addEventListener('click', () => {
+                sure.classList.remove('active');
+                return;
+            })
+
+            yes.addEventListener('click', async () => {
+                sure.classList.remove('active');
+
+                const sessionRes = await fetch('/session');
+                const sessionData = await sessionRes.json();
+
+                const roleRes = await fetch('/role');
+                const roleData = await roleRes.json();
+
+                if (sessionData.succes && roleData.role === 'admin') {
+
+                    const container = player.closest('.role-pick');
+                    const display = container.querySelector('.selected-role');
+                    display.textContent = 'Player';
+
+                    const menu = player.closest('.role-options');
+                    menu.classList.remove('active');
+
+                    const userId = player.closest('.list-el').dataset.id;
+                    updateRole(userId, 'player');
+
+                    const res = await fetch('/usersManagement');
+                    const data = await res.json();
+
+                    listUsers(data);
+                }
+                else {
+                    alert('You are not authorized to modify this role.')
+                }
+            })
+        })
+    })
+}
 
 /*
 document.addEventListener('DOMContentLoaded', () => {

@@ -63,7 +63,7 @@ app.post('/register', async (req, res) => {
 
         return res.status(201).json({ 
             succes: true, 
-            message: 'Username created succesfuly!.',
+            message: '',
             username: username
         })
         
@@ -157,6 +157,29 @@ app.get('/role', async (req, res) => {
     }
     catch(err){
         res.json({ succes: false });
+    }
+})
+
+app.post('/update-role', async (req, res) => {
+    const { userId, role } = req.body;
+
+    try{
+        await User.findByIdAndUpdate(userId, { role: role })
+        res.json({ succes: true });
+    }
+    catch(err){
+        console.log(err);
+        res.json({ succes: false });
+    }
+})
+
+app.delete('/users/:id', async (req, res) => {
+    try{
+        await User.findByIdAndDelete(req.params.id);
+        res.json({ message: 'User deleted succesfully' });
+    }
+    catch(err){
+        res.status(500).json({ error: 'Failed to delete user' })
     }
 })
 

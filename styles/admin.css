@@ -152,7 +152,7 @@ body{
     font-weight: bold;
     max-height: 0px;
     transition: 0.3s;
-    z-index: 2;
+    z-index: 12;
 }
 
 .options.active{
@@ -191,6 +191,7 @@ body{
     min-width: 850px;
     overflow-x: auto;
     height: 100%;
+    position: relative;
 
     display: flex;
     justify-content: center;
@@ -253,7 +254,6 @@ body{
     align-items: center;
     flex-direction: column;
     padding: 0px 2%;
-    z-index: 1;
 }
 
 .content{
@@ -264,7 +264,7 @@ body{
     justify-content: center;
     align-items: center;
     padding: 0px 2%;
-    z-index: 1;
+    z-index: 5;
 }
 
 .username, .password-container, .money, .role, .manage{
@@ -366,10 +366,10 @@ body{
     padding: 0px 2%;
     top: 100%;
     width: 100%;
-    z-index: 5;
-    overflow: hidden;
+    z-index: 3;
     transition: 0.3s;
-    max-height: 0px;
+    overflow: hidden;
+    max-height: 0px; /*******************hereeee********************/
     height: 50px;
 
     display: flex;
@@ -382,16 +382,20 @@ body{
 .submenu.active{
     transition: 0.3s;
     max-height: 50px;
+    overflow: visible;
 }
 
-.soon{
+.sub{
     width: 100%;
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     background-color:#2E7D32;
+    flex-direction: row;
     color: #ffffff;
+    gap: 10px;
+    z-index: 5;
 }
 
 .dont-exist{
@@ -407,3 +411,174 @@ body{
     width: 100%;
     padding: 0px 2%;
 }
+
+/************ Delete Menu *************/
+
+.delete-user{
+    font-weight: bold;
+    font-size: 18px;
+    background-color: rgb(226, 11, 11);
+    color: white;
+    border-radius: 10px;
+    border: 2px solid white;
+    padding: 3px 20px;
+    cursor: pointer;
+}
+
+.menu-delete, .menu-role{
+    position: absolute;
+    width: 45%;
+    background-color:#308f35;
+    border: 5px solid #2E7D32;
+    border-radius: 15px;
+    box-shadow:  0 4px 6px rgba(0,0,0,0.1), 0 10px 20px rgba(0,0,0,0.08);
+    z-index: 11;
+    top: 25%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 2%;
+
+    transform: translateY(-200%);
+    transition: 0.4s;
+}
+
+@media(max-width: 1100px){
+    .menu-delete, .menu-role{
+        width: 60%;
+    }
+}
+
+.menu-role.active{
+    transform: translateY(0%);
+    transition: 0.4s;
+}
+
+.menu-delete.active{
+    transform: translateY(0%);
+    transition: 0.4s;
+}
+
+.tit{
+    font-weight: bold;
+    font-size: 25px;
+    color: white;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.des{
+    color: white;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.yes-no-container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 25%;
+}
+
+.yes, .yes1, .no, .no1{
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+    padding: 1% 10%;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.yes:hover, .no:hover{
+    transform: scale(1.05);
+    transition: 0.3s;
+    box-shadow:  0 4px 6px rgba(0,0,0,0.1), 0 10px 20px rgba(0,0,0,0.08);
+}
+
+.yes1:hover, .no1:hover{
+    transform: scale(1.05);
+    transition: 0.3s;
+    box-shadow:  0 4px 6px rgba(0,0,0,0.1), 0 10px 20px rgba(0,0,0,0.08);
+}
+
+.no, .no1{
+    background-color: rgb(212, 10, 10);
+}
+
+.yes, .yes1{
+    background-color:#2E7D32;
+}
+
+/**************** Role Control *****************/
+
+.role-pick{
+    width: auto;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.selected-role-container{
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    padding: 0px 12px;
+    z-index: 1111;
+}
+
+.selected-role{
+    background-color:#308f35;
+    height: 100%;
+    padding: 0px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.role-options{
+    left: 100%;
+    width: auto;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+
+    max-width: 0px;
+    overflow: hidden;
+    transition: 0.5s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 1111;
+}
+
+.role-options.active{
+    max-width: 300px;
+    transition: 0.5s;
+    z-index: 1111;
+}
+
+
+.optionr{
+    height: 50px;
+    width: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color:#2E7D32;
+    padding: 0px 20px;
+    cursor: pointer;
+    z-index: 100;
+}
+
+

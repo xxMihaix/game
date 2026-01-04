@@ -1,14 +1,14 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Game</title>
     <link rel="stylesheet" href="/admin.css">
     <script src="admin.js" defer></script>
 </head>
+
 <body>
     <div class="navbar">You aren't Logged In</div>
 
@@ -18,22 +18,22 @@
 
     <div class="top-table-container">
 
-        <div class="top-table">
-            <div class='welcome'>Admin Control Pannel</div>
-            <div class="search-container">
-                <div class="search-by">Search By:</div>
-                <div class="selected-option">
-                    <p class="selected">Loading..</p>
-                    <div class="options">
-                        <div id="op1" class="option">Username</div>
-                        <div id="op2" class="option">Role</div>
-                        <div id="op3" class="option">Money</div>
-                    </div>
-                </div>
-
-                <input id="search" type="text" placeholder="Search..">
+<div class="top-table">
+    <div class='welcome'>Admin Control Pannel</div>
+    <div class="search-container">
+        <div class="search-by">Search By:</div>
+        <div class="selected-option">
+            <p class="selected">Loading..</p>
+            <div class="options">
+                <div id="op1" class="option">Username</div>
+                <div id="op2" class="option">Role</div>
+                <div id="op3" class="option">Money</div>
             </div>
         </div>
+
+        <input id="search" type="text" placeholder="Search..">
+    </div>
+</div>
 <div class="users-list">
     <div class="top">
         <div class="crtT">Crt. Nr.</div>
@@ -43,30 +43,53 @@
         <div class="roleT">Role</div>
         <div class="manageT">Manage</div>
     </div>
+    <div class="menu-role">
+        <p class="tit">Are you sure do you want to switch this user role?</p>
+        <p class="des">Changing this user’s role will update their permissions and access level immediately.
+                This may affect what actions they can perform in the system.
+<div class="yes-no-container">
+            <div class="no1">No</div>
+            <div class="yes1">Yes</div>
+        </div>
+    </div>
+    <div class="menu-delete">
+        <p class="tit">Are you sure do you want to delete this user?</p>
+        <p class="des">Deleting this user will permanently remove all their data, including profile information
+            and activity history. This action cannot be undone. Do you really want to proceed?</p>
+        <div class="yes-no-container">
+            <div class="no">No</div>
+            <div class="yes">Yes</div>
+        </div>
+    </div>
     <div class="list">
-        <div class="list-el">
+        <div class="list-el t1" data-id="${user._id}" id='user-${user._id}'>
             <div class="content">
-                <div class="crt">Loading...</div>
-                <div class="username">Loading...</div>
+                <div class="crt">${ctr}</div>
+                <div class="username">${user.username}</div>
                 <div class="password-container">
-                    <div class="password">Loading...</div><button class="copy">Copy</button>
+                    <div class="password">${user.password}</div><button class="copy">Copy</button>
                 </div>
-                <div class="money">Loading...</div>
-                <div class="role">Loading...</div>
+                <div class="money">Soon...</div>
+                <div class="role">${user.role}</div>
                 <div class="manage">
                     <button class="modify">Edit</button>
                 </div>
             </div>
             <!-- Submenu -->
             <div class="submenu">
-                <div class="soon">Edit Coming Soon..</div>
+                <div class="sub">
+                    <div class="role-pick">
+                        <div class="role-by">Role:</div>
+                        <p class="selected-role">Loading..</p>
+                        <div class="role-options">
+                            <div class="optionr opr1">Admin</div>
+                            <div class="optionr opr2">Player</div>
+                        </div>
+                    </div>
+                    <button class="delete-user" data-id="${user._id}">Delete User</button>
+                </div>
             </div>
         </div>
-        <div class="dont-exist">dont exist</div>
-    </div>
-</div>
-</div>
-
 </body>
 
 </html>
