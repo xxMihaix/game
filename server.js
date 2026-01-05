@@ -60,8 +60,10 @@ app.post('/register', async (req, res) => {
 
         await User.create({username: username, password: hashedPassword})
 
+        const user = await User.findOne({ username });
+
         req.session.username = username;
-        req.session.money = 10;
+        req.session.money = user.money;
 
         return res.status(201).json({ 
             succes: true, 
