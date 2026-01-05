@@ -61,7 +61,7 @@ app.post('/register', async (req, res) => {
         await User.create({username: username, password: hashedPassword})
 
         req.session.username = username;
-        res.session.money = 10;
+        req.session.money = 10;
 
         return res.status(201).json({ 
             succes: true, 
