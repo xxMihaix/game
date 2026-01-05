@@ -1,7 +1,7 @@
 
 document.addEventListener('DOMContentLoaded', function () {
-    //navWelcome();
-    //protectPage();
+    navWelcome();
+    protectPage();
 })
 
 function goback() {
