@@ -1,10 +1,10 @@
 
-document.addEventListener('DOMContentLoaded', function(){
-    navWelcome();
-    protectPage();
+document.addEventListener('DOMContentLoaded', function () {
+    //navWelcome();
+    //protectPage();
 })
 
-function goback(){
+function goback() {
     const btn = document.querySelector('.goback');
 
     btn.addEventListener('click', () => {
@@ -14,7 +14,7 @@ function goback(){
 
 goback();
 
-function opSearch(){
+function opSearch() {
     const showBtn = document.querySelector('.selected-option');
     const contOp = document.querySelector('.options');
     const selected = document.querySelector('.selected');
@@ -58,7 +58,7 @@ async function searchList() {
 
     const selected = document.querySelector('.selected').textContent;
     const searchValue = document.getElementById('search').value.trim().toLowerCase();
-    
+
     const filtered = data.filter(user => {
         if (selected === 'Username') {
             return user.username.toLowerCase().includes(searchValue);
@@ -67,7 +67,11 @@ async function searchList() {
             return user.role.toLowerCase().includes(searchValue);
         }
         else if (selected === 'Money') {
-            console.log('Comming soon');
+            const value = Number(searchValue);
+            if (isNaN(value)) {
+                return;
+            }
+            return user.money >= value;
         }
     });
 
@@ -75,27 +79,27 @@ async function searchList() {
 }
 
 
-async function navWelcome(){
+async function navWelcome() {
     res = await fetch('/session');
     data = await res.json();
 
     const navWelcome = document.querySelector('.navbar');
 
-    if(data.succes){
+    if (data.succes) {
         navWelcome.textContent = `Welcome, ${data.username}`;
     }
-    else{
+    else {
         console.log(err);
     }
 }
 
 
-async function protectPage(){
-    try{
+async function protectPage() {
+    try {
         const sessionRes = await fetch('/session');
         const sessionData = await sessionRes.json();
 
-        if(!sessionData.succes){
+        if (!sessionData.succes) {
             window.location.href = '/';
             return;
         }
@@ -103,16 +107,16 @@ async function protectPage(){
         const roleRes = await fetch('/role');
         const roleData = await roleRes.json();
 
-        if(!roleData.succes || roleData.role !== 'admin'){
+        if (!roleData.succes || roleData.role !== 'admin') {
             window.location.href = '/';
         }
     }
-    catch(err){
+    catch (err) {
         window.location.href = '/';
     }
 }
 
-async function startList(){
+async function startList() {
     res = await fetch('/usersManagement');
     data = await res.json();
 
@@ -121,18 +125,18 @@ async function startList(){
 
 startList();
 
-async function listUsers(data, searchValue){
+async function listUsers(data, searchValue) {
 
     const listCont = document.querySelector('.list');
     listCont.innerHTML = ``;
 
-    if(data.length > 0){
+    if (data.length > 0) {
 
-    let ctr = 0;
-    data.forEach(user => {
-    ctr++;
+        let ctr = 0;
+        data.forEach(user => {
+            ctr++;
 
-    const el = `
+            const el = `
         <div class="list-el" data-id="${user._id}" id='user-${user._id}'>
             <div class="content">
                 <div class="crt">${ctr}</div>
@@ -140,7 +144,7 @@ async function listUsers(data, searchValue){
                 <div class="password-container">
                     <div class="password">${user.password}</div><button class="copy">Copy</button>
                 </div>
-                <div class="money">Soon...</div>
+                <div class="money">${user.money}</div>
                 <div class="role">${user.role.charAt(0).toUpperCase() + user.role.slice(1).toLowerCase()}</div>
                 <div class="manage">
                     <button class="modify">Edit</button>
@@ -149,6 +153,11 @@ async function listUsers(data, searchValue){
             <!-- Submenu -->
             <div class="submenu">
                 <div class="sub">
+                    <div class="money-mod-container">
+                        <div class="money-tit">Money:</div>
+                        <input type="number" class="money-input" placeholder="Set Amount..">
+                        <button class="submit-money">Send</button>
+                    </div>
                     <div class="role-pick">
                         <div class="role-by">Role:</div>
                         
@@ -164,26 +173,27 @@ async function listUsers(data, searchValue){
             </div>
         </div>`;
 
-    listCont.innerHTML += el;
-    })
+            listCont.innerHTML += el;
+        })
 
-    submenu();
-    copy();
-    deleteUser();
-    roleManage();
-    roleText();
+        submenu();
+        copy();
+        deleteUser();
+        roleManage();
+        roleText();
+        moneyInput();
     }
     else {
-    const el = `<div class="dont-exist">Can't find: ${searchValue}</div>`;
-    listCont.innerHTML += el;
+        const el = `<div class="dont-exist">Can't find: ${searchValue}</div>`;
+        listCont.innerHTML += el;
 
-    const dontExist = document.querySelector('.dont-exist');
+        const dontExist = document.querySelector('.dont-exist');
 
-    dontExist.style.display = 'flex';
+        dontExist.style.display = 'flex';
+    }
 }
-}
 
-async function deleteUser(){
+async function deleteUser() {
     const delMenu = document.querySelector('.menu-delete');
     const no = document.querySelector('.no');
     const yes = document.querySelector('.yes');
@@ -207,7 +217,7 @@ async function deleteUser(){
     yes.addEventListener('click', async () => {
         delMenu.classList.remove('active');
 
-        if(!currentUserId){
+        if (!currentUserId) {
             return;
         }
 
@@ -238,26 +248,26 @@ async function deleteUser(){
                 alert('Error deleting user');
             }
         }
-        else{
+        else {
             alert('You are not authorized to delete this user.');
         }
     })
 }
 
-function copy(){
+function copy() {
     const copybtn = document.querySelectorAll('.copy');
-    
+
     copybtn.forEach(btn => {
         btn.addEventListener('click', () => {
             const contDiv = btn.closest('.password-container');
             const contText = contDiv.querySelector('.password').textContent;
-            
+
             navigator.clipboard.writeText(contText)
         })
     })
 }
 
-function submenu(){
+function submenu() {
     const btn = document.querySelectorAll('.modify');
 
     btn.forEach(btn => {
@@ -266,26 +276,86 @@ function submenu(){
             const current = listEl.querySelector('.submenu');
 
             document.querySelectorAll('.submenu').forEach(sub => {
-                if(sub !== current){
+                if (sub !== current) {
                     sub.classList.remove('active');
                 }
             })
 
             current.classList.toggle('active');
-    })
+        })
     })
 }
 
-async function roleManage(){
+function moneyInput() {
+    const send = document.querySelectorAll('.submit-money');
+
+    send.forEach(send => {
+        send.addEventListener('click', async () => {
+            const menu = document.querySelector('.menu-money');
+            const no = document.querySelector('.no0');
+            const yes = document.querySelector('.yes0');
+
+            menu.classList.add('active');
+
+            no.addEventListener('click', () => {
+                menu.classList.remove('active');
+                return;
+            })
+
+            yes.addEventListener('click', async () => {
+                menu.classList.remove('active');
+
+                const sessionRes = await fetch('/session');
+                const sessionData = await sessionRes.json();
+
+                const roleRes = await fetch('/role');
+                const roleData = await roleRes.json();
+
+                if (sessionData.succes && roleData.role === 'admin') {
+
+                    const input = send.closest('.money-mod-container');
+                    const value = Number(input.querySelector('.money-input').value);
+
+                    const userId = send.closest('.list-el').dataset.id;
+
+                    if (isNaN(value)) return;
+
+                    const res = await fetch('/updateMoney', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ userId, value })
+                    })
+
+                    const data = await res.json();
+
+                    if (!data.succes) {
+                        console.log('Eroare at update money');
+                        return;
+                    }
+
+                    const res2 = await fetch('/usersManagement');
+                    const data2 = await res2.json();
+
+                    listUsers(data2);
+                }
+                else {
+                    alert('You are not authorized to send money to this user.')
+                }
+            })
+        })
+    })
+}
+
+function roleManage() {
     const btn = document.querySelectorAll('.selected-role');
 
     btn.forEach(btn => {
-        btn.addEventListener('click', () =>{
+        btn.addEventListener('click', () => {
             const src = btn.closest('.role-pick');
             const menu = src.querySelector('.role-options');
 
             document.querySelectorAll('.role-options').forEach(el => {
-                if(el !== menu){
+                if (el !== menu) {
                     el.classList.remove('active');
                 }
             })
@@ -294,26 +364,26 @@ async function roleManage(){
     })
 }
 
-function roleText(){
+function roleText() {
     const admin = document.querySelectorAll('.opr1');
     const player = document.querySelectorAll('.opr2');
 
-    async function updateRole(userId, role){
-        
-        try{
+    async function updateRole(userId, role) {
+
+        try {
             const res = await fetch('/update-role', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userId, role })
-        })
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId, role })
+            })
 
-        const data = await res.json(); 
+            const data = await res.json();
 
-        if(!data.succes){
-            alert('Error at updating role');
+            if (!data.succes) {
+                alert('Error at updating role');
+            }
         }
-        }
-        catch(err){
+        catch (err) {
             console.log(err);
         }
     }
@@ -358,7 +428,7 @@ function roleText(){
 
                     listUsers(data);
                 }
-                else{
+                else {
                     alert('You are not authorized to modify this role.')
                 }
             })

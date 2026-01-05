@@ -94,7 +94,7 @@ body{
 }
 
 .top-table{
-    min-width: 850px;
+    min-width: 900px;
     background-color: #2E7D32;
     height: 50px;
     padding: 0px 2%;
@@ -188,7 +188,7 @@ body{
 /************ Table **************/
 
 .users-list{
-    min-width: 850px;
+    min-width: 900px;
     overflow-x: auto;
     height: 100%;
     position: relative;
@@ -425,7 +425,7 @@ body{
     cursor: pointer;
 }
 
-.menu-delete, .menu-role{
+.menu-delete, .menu-role, .menu-money{
     position: absolute;
     width: 45%;
     background-color:#308f35;
@@ -446,9 +446,14 @@ body{
 }
 
 @media(max-width: 1100px){
-    .menu-delete, .menu-role{
+    .menu-delete, .menu-role, .menu-money{
         width: 60%;
     }
+}
+
+.menu-money.active{
+    transform: translateY(0%);
+    transition: 0.4s;
 }
 
 .menu-role.active{
@@ -484,7 +489,7 @@ body{
     gap: 25%;
 }
 
-.yes, .yes1, .no, .no1{
+.yes, .yes1, .no, .no1, .no0, .yes0{
     color: white;
     font-weight: bold;
     font-size: 20px;
@@ -506,11 +511,17 @@ body{
     box-shadow:  0 4px 6px rgba(0,0,0,0.1), 0 10px 20px rgba(0,0,0,0.08);
 }
 
-.no, .no1{
+.yes0:hover, .no0:hover{
+    transform: scale(1.05);
+    transition: 0.3s;
+    box-shadow:  0 4px 6px rgba(0,0,0,0.1), 0 10px 20px rgba(0,0,0,0.08);
+}
+
+.no, .no1, .no0{
     background-color: rgb(212, 10, 10);
 }
 
-.yes, .yes1{
+.yes, .yes1, .yes0{
     background-color:#2E7D32;
 }
 
@@ -525,14 +536,10 @@ body{
     gap: 10px;
 }
 
-.selected-role-container{
-    height: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    padding: 0px 12px;
-    z-index: 1111;
+@media(max-width: 1100px){
+    .role-pick{
+        position: relative;
+    }
 }
 
 .selected-role{
@@ -562,6 +569,12 @@ body{
     z-index: 1111;
 }
 
+@media(max-width: 1100px){
+    .role-options{
+        position: absolute;
+    }
+}
+
 .role-options.active{
     max-width: 300px;
     transition: 0.5s;
@@ -580,5 +593,50 @@ body{
     cursor: pointer;
     z-index: 100;
 }
+
+/************** Money Input ***************/
+
+.money-mod-container{
+    height: 100%;
+    width: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding-right: 20px;
+}
+
+.money-input{
+    font-size: 16px;
+    font-weight: bold;
+    padding: 3px 10px;
+    border: 0px;
+    outline: none;
+    width: 200px;
+}
+
+@media(max-width: 900px){
+    .money-input{
+        width: 150px;
+    }
+}
+
+.submit-money{
+    color: #2c7a30;
+    font-weight: bold;
+    font-size: 17px;
+    padding: 3px 25px;
+    background-color: white;
+    border: 3px solid #308f35;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+
+
+
+
+
+
 
 

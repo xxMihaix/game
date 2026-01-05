@@ -43,11 +43,20 @@
         <div class="roleT">Role</div>
         <div class="manageT">Manage</div>
     </div>
+    <div class="menu-money">
+        <p class="tit">Are you sure do you want to send money to this user?</p>
+        <p class="des">Sending money will immediately transfer the specified amount to this user. This action
+             cannot be undone. Do you really want to proceed?</p>
+        <div class="yes-no-container">
+            <div class="no0">No</div>
+            <div class="yes0">Yes</div>
+        </div>
+    </div>
     <div class="menu-role">
         <p class="tit">Are you sure do you want to switch this user role?</p>
         <p class="des">Changing this user’s role will update their permissions and access level immediately.
                 This may affect what actions they can perform in the system.
-<div class="yes-no-container">
+        <div class="yes-no-container">
             <div class="no1">No</div>
             <div class="yes1">Yes</div>
         </div>
@@ -78,6 +87,11 @@
             <!-- Submenu -->
             <div class="submenu">
                 <div class="sub">
+                    <div class="money-mod-container">
+                        <div class="money-tit">Money:</div>
+                        <input type="number" class="money-input" placeholder="Set Amount..">
+                        <button class="submit-money">Send</button>
+                    </div>
                     <div class="role-pick">
                         <div class="role-by">Role:</div>
                         <p class="selected-role">Loading..</p>

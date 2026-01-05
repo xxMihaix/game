@@ -31,16 +31,17 @@ mongoose.connect(process.env.MONGO_URI)
     console.log('NU e conectat');
 })
 
-app.get('/session', (req, res) => {
+const User = require('./schema.js');
+
+app.get('/session', async (req, res) => {
+
     if(req.session.username){
-        res.json({ succes: true, username: req.session.username});
+        res.json({ succes: true, username: req.session.username, money: req.session.money});
     }
     else{
         res.json({ succes: false});
     }
 })
-
-const User = require('./schema.js');
 
 app.post('/register', async (req, res) => {
     try{
@@ -60,11 +61,12 @@ app.post('/register', async (req, res) => {
         await User.create({username: username, password: hashedPassword})
 
         req.session.username = username;
+        res.session.money = 10;
 
         return res.status(201).json({ 
             succes: true, 
             message: '',
-            username: username
+            username: username,
         })
         
     }}
@@ -97,11 +99,12 @@ app.post('/login', async (req, res) => {
         }
 
         req.session.username = user.username;
+        req.session.money = user.money;
 
         res.json({
             succes: true,
             message: 'Login succesful!',
-            username: user.username
+            username: user.username,
         })
         
     }
@@ -173,6 +176,26 @@ app.post('/update-role', async (req, res) => {
     }
 })
 
+app.post('/updateMoney', async (req, res) => {
+    
+    const { userId, value } = req.body;
+
+    try{
+        const updatedUser = await User.findByIdAndUpdate(userId, { $inc: { money: value} }, {new: true})
+
+        if (req.session.username && updatedUser.username === req.session.username){
+            req.session.money = updatedUser.money;
+        }
+        res.json({
+            succes: true,
+        });
+    }
+    catch(err){
+        console.log(err);
+        res.json({ succes: false })
+    }
+})
+
 app.delete('/users/:id', async (req, res) => {
     try{
         await User.findByIdAndDelete(req.params.id);
@@ -182,6 +205,7 @@ app.delete('/users/:id', async (req, res) => {
         res.status(500).json({ error: 'Failed to delete user' })
     }
 })
+
 
 app.listen(3000, () => {
     console.log(`Server-ul ruleaza la portul: 3000`);

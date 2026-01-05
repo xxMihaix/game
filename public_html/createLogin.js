@@ -97,9 +97,11 @@ async function welcome(){
     const data = await res.json();
 
     const welcomeText = document.getElementById('welcome');
+    const moneyText = document.getElementById('account-balance');
 
     if(data.succes){
         welcomeText.textContent = `Welcome, ${data.username}`;
+        moneyText.textContent = `Money: ${data.money}`;
     }
 }
 
