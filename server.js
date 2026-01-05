@@ -36,7 +36,7 @@ const User = require('./schema.js');
 app.get('/session', async (req, res) => {
 
     if(req.session.username){
-        res.json({ succes: true, username: req.session.username, money: req.session.money});
+        res.json({ succes: true, username: req.session.username});
     }
     else{
         res.json({ succes: false});
@@ -60,10 +60,7 @@ app.post('/register', async (req, res) => {
 
         await User.create({username: username, password: hashedPassword})
 
-        const user = await User.findOne({ username });
-
         req.session.username = username;
-        req.session.money = user.money;
 
         return res.status(201).json({ 
             succes: true, 
@@ -77,7 +74,6 @@ app.post('/register', async (req, res) => {
          res.status(500).json({ succes: false, message: 'Eroare server' });
     }
 });
-
 
 app.post('/login', async (req, res) => {
     try{
@@ -101,7 +97,6 @@ app.post('/login', async (req, res) => {
         }
 
         req.session.username = user.username;
-        req.session.money = user.money;
 
         res.json({
             succes: true,
@@ -178,16 +173,30 @@ app.post('/update-role', async (req, res) => {
     }
 })
 
+app.get('/money', async (req, res) => {
+    if(!req.session.username){
+        return res.json({ succes: false});
+    }
+
+    try{
+        const user = await User.findOne({ username: req.session.username });
+        if(!user) return res.json({ succes: false});;
+
+        res.json({ succes: true, money: user.money });
+    }
+    catch(err){
+        console.log(err);
+        return res.status(500).json({ succes: false});
+    }
+})
+
 app.post('/updateMoney', async (req, res) => {
     
     const { userId, value } = req.body;
 
     try{
-        const updatedUser = await User.findByIdAndUpdate(userId, { $inc: { money: value} }, {new: true})
+        await User.findByIdAndUpdate(userId, { $inc: { money: value} }, {new: true})
 
-        if (req.session.username && updatedUser.username === req.session.username){
-            req.session.money = updatedUser.money;
-        }
         res.json({
             succes: true,
         });

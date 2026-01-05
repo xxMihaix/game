@@ -96,12 +96,18 @@ async function welcome(){
     const res = await fetch('/session');
     const data = await res.json();
 
+    const res2 = await fetch('/money');
+    const data2 = await res2.json();
+
     const welcomeText = document.getElementById('welcome');
     const moneyText = document.getElementById('account-balance');
 
     if(data.succes){
         welcomeText.textContent = `Welcome, ${data.username}`;
-        moneyText.textContent = `Money: ${data.money}`;
+    }
+
+    if(data2.succes){
+        moneyText.textContent = `Money: ${data2.money}`;
     }
 }
 
