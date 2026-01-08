@@ -7,6 +7,8 @@ const app = express();
 const session = require('express-session');
 const bcrypt = require('bcrypt')
 
+const USERNAME_COOLDOWN = 14 * 24 * 60 * 60 * 1000; // 14 zile
+
 app.use(express.static(path.join(__dirname, 'public_html')));
 app.use(express.static(path.join(__dirname, 'styles')));
 app.use(express.static(path.join(__dirname, 'images')));
@@ -33,15 +35,64 @@ mongoose.connect(process.env.MONGO_URI)
 
 const User = require('./schema.js');
 
+/*
 app.get('/session', async (req, res) => {
 
-    if(req.session.username){
-        res.json({ succes: true, username: req.session.username});
+    if(req.session.userid){
+        res.json({ succes: true, userid: req.session.userid, });
     }
     else{
         res.json({ succes: false});
     }
 })
+
+app.get('/name', async (req, res) => {
+
+    if(!req.session.userid){
+        return res.json({ succes: false });
+    }
+
+    try{
+
+        const user = await User.findById(req.session.userid);
+        if(!user) return res.json({ succes: false });
+
+        res.json({
+            succes: true,
+            username: user.username,
+        });
+    } catch(err){
+        console.log(err);
+        res.json({ succes: false, message: 'Error fetching user data' });
+    }
+});
+*/
+
+app.get('/session', async (req, res) => {
+
+    if(!req.session.userid){
+        return res.json({ succes: false });
+    }
+
+    try{
+        const user = await User.findById(req.session.userid);
+
+        if (!user) return res.json({ succes: false });
+
+        res.json({ 
+            succes: true, 
+            userid: user._id,
+            username: user.username,
+            money: user.money,
+            role: user.role
+         })
+    }
+    catch(err) {
+        console.log(err);
+        res.json({ succes: false, message: 'Error /username/catch' })
+    }
+})
+
 
 app.post('/register', async (req, res) => {
     try{
@@ -58,14 +109,13 @@ app.post('/register', async (req, res) => {
     }else{
         const hashedPassword = await bcrypt.hash(password, 10)
 
-        await User.create({username: username, password: hashedPassword})
+        const user = await User.create({username: username, password: hashedPassword})
 
-        req.session.username = username;
+        req.session.userid = user._id;
 
         return res.status(201).json({ 
             succes: true, 
             message: '',
-            username: username,
         })
         
     }}
@@ -76,40 +126,36 @@ app.post('/register', async (req, res) => {
 });
 
 app.post('/login', async (req, res) => {
-    try{
+    try {
         const { username, password } = req.body;
 
         const user = await User.findOne({ username });
-
-        if(!user){
-            return res.json({
-                succes: false,
-                message: 'User not found!'
-            })
+        if (!user) {
+            return res.json({ succes: false, message: 'User not found!' });
         }
 
-        const match = await bcrypt.compare(password, user.password);
-        if(!match && !user.password) {
-            return res.json({
-                succes: false,
-                message: 'Wrong password!'
-            })
+        let match = false;
+
+        if (user.password.startsWith('$2')) {
+            match = await bcrypt.compare(password, user.password);
+        } else {
+            match = password.trim() === user.password.trim();
         }
 
-        req.session.username = user.username;
+        if (!match) {
+            return res.json({ succes: false, message: 'Wrong password!' });
+        }
 
-        res.json({
-            succes: true,
-            message: 'Login succesful!',
-            username: user.username,
-        })
-        
-    }
-    catch(err){
+        req.session.userid = user._id;
+
+        res.json({ succes: true, message: 'Login succesful!' });
+
+    } catch (err) {
         console.log(err);
-        res.status(500).json({ succes: false, message: 'Server error'});
+        res.status(500).json({ succes: false, message: 'Server error' });
     }
-})
+});
+
 
 app.post('/logout', (req, res) => {
     req.session.destroy(err=> {
@@ -143,12 +189,12 @@ app.get('/usersManagement', async (req, res) => {
 })
 
 app.get('/role', async (req, res) => {
-    if(!req.session.username){
+    if(!req.session.userid){
         return res.json({ succes: false });
     }
 
     try{
-        const user = await User.findOne({ username: req.session.username });
+        const user = await User.findById(req.session.userid);
 
         if(!user) return res.json({ succes: false });
 
@@ -174,12 +220,12 @@ app.post('/update-role', async (req, res) => {
 })
 
 app.get('/money', async (req, res) => {
-    if(!req.session.username){
+    if(!req.session.userid){
         return res.json({ succes: false});
     }
 
     try{
-        const user = await User.findOne({ username: req.session.username });
+        const user = await User.findById(req.session.userid);
         if(!user) return res.json({ succes: false});;
 
         res.json({ succes: true, money: user.money });
@@ -216,6 +262,55 @@ app.delete('/users/:id', async (req, res) => {
         res.status(500).json({ error: 'Failed to delete user' })
     }
 })
+
+app.post('/userUpdate', async (req, res) => {
+    const { newValue } = req.body;
+
+    if (!req.session.userid) {
+        return res.status(401).json({ success: false, message: 'No session active' });
+    }
+
+    if (!newValue || newValue.length < 2) {
+        return res.json({ succes: false, message: 'Invalid username' });
+    }
+
+    try {
+        const user = await User.findById(req.session.userid);
+        if (!user) {
+            return res.json({ success: false, message: 'User Error' });
+        }
+
+        let remaining = 0;
+        if (user.lastUsernameChange) {
+            const now = Date.now();
+            const lastChange = new Date(user.lastUsernameChange).getTime();
+            remaining = USERNAME_COOLDOWN - (now - lastChange);
+        }
+
+        if (remaining > 0) {
+            return res.json({
+                success: false,
+                message: 'You must wait',
+                remainingMs: remaining
+            });
+        }
+
+        const exists = await User.findOne({ username: newValue });
+        if (exists && exists._id.toString() !== user._id.toString()) {
+            return res.json({ success: false, message: 'Username already exists' });
+        }
+
+        user.username = newValue;
+        user.lastUsernameChange = new Date();
+        await user.save();
+
+        res.json({ success: true, message: 'Username updated succesfuly!!' });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: 'Error server' });
+    }
+});
 
 
 app.listen(3000, () => {

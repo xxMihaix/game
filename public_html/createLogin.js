@@ -92,6 +92,16 @@ async function adminBtn(){
     }
 }
 
+function gosettings() {
+    const btn = document.querySelector('.settings-btn');
+
+    btn.addEventListener('click', () => {
+        window.location.href = 'settings.html';
+    })
+}
+
+gosettings();
+
 async function welcome(){
     const res = await fetch('/session');
     const data = await res.json();
@@ -103,7 +113,7 @@ async function welcome(){
     const moneyText = document.getElementById('account-balance');
 
     if(data.succes){
-        welcomeText.textContent = `Welcome, ${data.username}`;
+        welcomeText.textContent = `Hello, ${data.username}`;
     }
 
     if(data2.succes){
@@ -117,12 +127,11 @@ async function navWelcome(){
 
     const navwelcome = document.querySelector('.navbar');
     const welcome = document.querySelector('.welcome-user-container');
-    const welcomeText = document.getElementById('welcome');
     const createLogin = document.querySelectorAll('.create-user-container, .login-user-container');
     
 
     if(data.succes) {
-        navwelcome.textContent = `Welcome, ${data.username}`;
+        navwelcome.textContent = `Hello, ${data.username}`;
 
         createLogin.forEach(el => {
             el.style.display = 'none';

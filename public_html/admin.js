@@ -86,7 +86,7 @@ async function navWelcome() {
     const navWelcome = document.querySelector('.navbar');
 
     if (data.succes) {
-        navWelcome.textContent = `Welcome, ${data.username}`;
+        navWelcome.textContent = `Hello, ${data.username}`;
     }
     else {
         console.log(err);

@@ -7,13 +7,17 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
+    lastUsernameChange: {
+        type: Date,
+        default: null
+    },
     password: {
         type: String,
-        required: true,
+        required: true
     },
     money: {
         type: Number,
-        default: 10,
+        default: 10
     },
     role: {
         type: String,

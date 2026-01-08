@@ -85,7 +85,25 @@ body{
     cursor: pointer;
 }
 
-.admin:hover{
+.admin-btn:hover{
+    transform: scale(1.1);
+    transition: 0.3s;
+}
+
+.settings-btn{
+    display: flex;
+    margin-top: 15px;
+    border-radius: 25px;
+    padding: 7px 30px;
+    font-size: 17px;
+    border: none;
+    font-weight: bold;
+    background-color: rgb(255, 255, 255);
+    color: green;
+    cursor: pointer;
+}
+
+.settings-btn:hover{
     transform: scale(1.1);
     transition: 0.3s;
 }

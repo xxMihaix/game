@@ -13,6 +13,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon server.js",
+    "update": "nodemon updateData.js",
     "sync": "browser-sync start --proxy \"localhost:3000\" --files \"public_html/**/*.*, styles/**/*.css, images/**/*.*\""
   },
   "keywords": [],
