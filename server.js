@@ -313,6 +313,53 @@ app.post('/userUpdate', async (req, res) => {
 });
 
 
+app.post('/newPassword', async (req, res) => {
+    const { currentPassword, newPassword, confirmNewPassword } = req.body;
+
+    try {
+        if (!req.session.userid) return res.json({ success: false, message: 'Session user id required' });
+
+        if (!currentPassword || !newPassword || !confirmNewPassword) {
+            return res.json({ success: false, message: 'All fields are required' });
+        }
+
+        if (newPassword.length < 1) {
+            return res.json({ success: false, message: 'Password too short' });
+        }
+
+        const user = await User.findById(req.session.userid);
+
+        if(!user) return res.json({ success: false, message: 'User not found' })
+
+        const match = await bcrypt.compare(currentPassword, user.password)
+
+        if (!match) {
+            return res.json({ success: false, message: 'Current password incorect' })
+        }
+
+        if (newPassword !== confirmNewPassword) {
+            return res.json({ success: false, message: 'The passwords do not match' })
+        }
+
+        const same = await bcrypt.compare(newPassword, user.password);
+        if (same) {
+            return res.json({ success: false, message: 'New password must be different' });
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        user.password = hashedPassword;
+        await user.save();
+        return res.json({ success: true, message: 'Modifiy made succesfuly' })
+    }
+    catch(err){
+        console.log(err);
+        return res.status(500).json({ success: false, message: 'Server error' })
+    }
+
+})
+
+
 app.listen(3000, () => {
     console.log(`Server-ul ruleaza la portul: 3000`);
 });

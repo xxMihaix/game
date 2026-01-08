@@ -44,6 +44,16 @@ function openClose(){
 
 openClose();
 
+function goback() {
+    const btn = document.querySelector('.goback');
+
+    btn.addEventListener('click', () => {
+        window.location.href = '/';
+    })
+}
+
+goback();
+
 async function currentUser(){
     const text = document.querySelector('.name2');
 
@@ -132,7 +142,51 @@ async function changeUsername() {
         }
     }, 1000);
 }
-
 }
 
 changeUsername();
+
+
+async function changePassowrd(){
+    const submit = document.querySelector('.submit-new-pass');
+
+    submit.addEventListener('click', async (e) => {
+        e.preventDefault();
+
+        const menu = document.querySelector('.confirm-change-password-container');
+        const no = document.querySelector('.no-pass');
+        const yes = document.querySelector('.yes-pass')
+
+        menu.classList.add('active');
+
+        no.addEventListener('click', () => {
+            menu.classList.remove('active');
+            return;
+        })
+
+        yes.addEventListener('click', async () => {
+            menu.classList.remove('active');
+
+            const currentPassword = document.querySelector('.input1').value.trim();
+            const newPassword = document.querySelector('.input2').value.trim();
+            const confirmNewPassword = document.querySelector('.input3').value.trim();
+
+            const res = await fetch('/newPassword', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ currentPassword, newPassword, confirmNewPassword })
+            })
+
+            const data = await res.json();
+
+            if (data.success) {
+                alert(data.message)
+            }
+            else {
+                alert(data.message);
+            }
+        })
+    })
+}
+
+changePassowrd();

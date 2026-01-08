@@ -18,13 +18,19 @@ html, body{
 
 body{
     gap: 30px;
-    background-color: #E8F5E9;
+    background-color: #308f35;
     background-image: url(../images/bg.jpg);
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
     background-attachment: fixed; 
     position: relative;
+}
+
+@media(max-width: 800px){
+    body{
+        background-image: none;
+    }
 }
 
 /**************** Navigation Bar ********************/
@@ -135,7 +141,22 @@ body{
     border-top-right-radius: 20px;
 }
 
+.goback-container{
+    width: 100%;
+    padding: 15px 0;
+    padding-left: 20px;
+}
 
+.goback{
+    color: white;
+    border: 2px solid white;
+    border-radius: 15px;
+    background-color:#308f35;
+    padding: 5px 15px;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+}
 
 @media(max-width: 800px){
     .container-settings-center{
@@ -152,14 +173,12 @@ body{
     font-weight: bold;
     font-size: 30px;
     color: white;
-    margin-top: 20px;
     text-align: center;
 }
 
 @media(max-width: 550px){
     .prof-set-tit{
         font-size: 25px;
-        margin-top: 15px;
     }
 }
 
@@ -183,12 +202,19 @@ body{
 
 .img-cont{
     aspect-ratio: 1/1;
-    background-color: red;
+    background-color: rgb(134, 134, 134);
     width: 220px;
     border-radius: 50%;
     position: relative;
     border: 2px solid #ffffff;
     cursor: pointer;
+    
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .pic{
@@ -322,7 +348,7 @@ body{
 
 /************* Confirm change username **************/
 
-.confirm-change-user-container{
+.confirm-change-user-container, .confirm-change-password-container{
     position: fixed;
     top: 50%;
     left: 50%;
@@ -345,6 +371,11 @@ body{
 }
 
 .confirm-change-user-container.active{
+    transform: translate(-50%, -50%);
+    opacity: 1;
+}
+
+.confirm-change-password-container.active{
     transform: translate(-50%, -50%);
     opacity: 1;
 }
@@ -372,7 +403,7 @@ body{
     gap: 25%;
 }
 
-.yes-user, .no-user{
+.yes-user, .no-user, .yes-pass, .no-pass{
     color: white;
     font-weight: bold;
     font-size: 20px;
@@ -388,11 +419,17 @@ body{
     box-shadow:  0 4px 6px rgba(0,0,0,0.1), 0 10px 20px rgba(0,0,0,0.08);
 }
 
-.no-user{
+.yes-pass:hover, .no-pass:hover{
+    transform: scale(1.05);
+    transition: 0.3s;
+    box-shadow:  0 4px 6px rgba(0,0,0,0.1), 0 10px 20px rgba(0,0,0,0.08);
+}
+
+.no-user, .no-pass{
     background-color: rgb(212, 10, 10);
 }
 
-.yes-user{
+.yes-user, .yes-pass{
     background-color:#2E7D32;
 }
 
@@ -400,10 +437,16 @@ body{
     .confirm-change-user-container{
         width: 55%;
     }
+    .confirm-change-password-container{
+        width: 55%;
+    }
 }
 
 @media(max-width: 1100px){
     .confirm-change-user-container{
+        width: 70%;
+    }
+    .confirm-change-password-container{
         width: 70%;
     }
 }
@@ -413,12 +456,20 @@ body{
         width: 70%;
         padding: 2%;
     }
+    .confirm-change-password-container{
+        width: 70%;
+        padding: 2%;
+    }
 }
 
 @media(max-width: 550px){
     .confirm-change-user-container{
         width: 80%;
-        padding: 2%;
+        padding: 4%;
+    }
+    .confirm-change-password-container{
+        width: 80%;
+        padding: 4%;
     }
 
     .des{
