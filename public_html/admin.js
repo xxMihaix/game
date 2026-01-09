@@ -44,12 +44,18 @@ function opSearch() {
 
 opSearch();
 
-document.addEventListener('DOMContentLoaded', () => {
-    const search = document.getElementById('search');
+document.addEventListener('DOMContentLoaded', async () => {
 
-    search.addEventListener('input', () => {
-        searchList();
-    })
+    const res = await fetch('/session');
+    const data = await res.json();
+
+    if (data.userid && data.role === 'admin') {
+        const search = document.getElementById('search');
+
+        search.addEventListener('input', () => {
+            searchList();
+        })
+    }
 })
 
 async function searchList() {
@@ -117,10 +123,16 @@ async function protectPage() {
 }
 
 async function startList() {
-    res = await fetch('/usersManagement');
-    data = await res.json();
 
-    return listUsers(data);
+    const resUser = await fetch('/session');
+    const dataUser = await resUser.json();
+
+    if(dataUser.userid){
+        res = await fetch('/usersManagement');
+        data = await res.json();
+
+        return listUsers(data);
+    }
 }
 
 startList();

@@ -35,39 +35,6 @@ mongoose.connect(process.env.MONGO_URI)
 
 const User = require('./schema.js');
 
-/*
-app.get('/session', async (req, res) => {
-
-    if(req.session.userid){
-        res.json({ succes: true, userid: req.session.userid, });
-    }
-    else{
-        res.json({ succes: false});
-    }
-})
-
-app.get('/name', async (req, res) => {
-
-    if(!req.session.userid){
-        return res.json({ succes: false });
-    }
-
-    try{
-
-        const user = await User.findById(req.session.userid);
-        if(!user) return res.json({ succes: false });
-
-        res.json({
-            succes: true,
-            username: user.username,
-        });
-    } catch(err){
-        console.log(err);
-        res.json({ succes: false, message: 'Error fetching user data' });
-    }
-});
-*/
-
 app.get('/session', async (req, res) => {
 
     if(!req.session.userid){

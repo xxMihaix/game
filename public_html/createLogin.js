@@ -1,14 +1,37 @@
 
+document.addEventListener('DOMContentLoaded', async () => {
+    const welcome = document.querySelector('.welcome-user-container');
+    const register = document.querySelector('.create-user-container');
+    const login = document.querySelector('.login-user-container');
 
-const switchbtn = document.querySelectorAll('.gologin button, .gocreate button');
-const login = document.querySelector('.create-user-container');
-const register = document.querySelector('.login-user-container');
+    const gologin = document.querySelector('.gologin button');
+    const goregister = document.querySelector('.gocreate button');
 
-switchbtn.forEach(btn => {
-    btn.addEventListener('click', function(){
-    register.classList.toggle('active');
-    login.classList.toggle('active');
-})
+
+    const res = await fetch('/session');
+    const data = await res.json();
+
+    if(!data.userid){
+        welcome.style.display = 'none';
+        login.style.display = 'none';
+        register.style.display = 'flex';
+
+        gologin.addEventListener('click', () => {
+            register.style.display = 'none';
+            login.style.display = 'flex';
+        })
+
+        goregister.addEventListener('click', () => {
+            login.style.display = 'none';
+            register.style.display = 'flex';
+        })
+    }
+    else {
+        welcome.style.display = 'flex';
+        login.style.display = 'none';
+        register.style.display = 'none';
+    }
+
 })
 
 
