@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game</title>
     <link rel="stylesheet" href="/index.css">
-    <script type="module" src="loadusers.js" defer></script>
-    <script src="createLogin.js" defer></script>
+    <script src="loadusers.js" defer></script>
+    <script type="module" src="createLogin.js" defer></script>
 </head>
 
 <body>
-    <div class="navbar">Loading..</div>
+    <div class="navbar">You are not logged</div>
 
     <div class="position-create-table">
 
@@ -19,7 +19,7 @@
             <p class="title">Create user:</p>
             <form action="/register" method="POST" id="register">
 
-                <input class="input" type="text" name="username" id="username"  minlength="5" maxlength="20" required placeholder="Username"><br>
+                <input class="input" type="text" name="username" id="username"  minlength="6" maxlength="20" required placeholder="Username"><br>
                 <input class="input" type="password" name="password" id="password" minlength="6" maxlength="50" required placeholder="Password"><br>
                 <p id="user-exist"></p>
 
@@ -42,14 +42,14 @@
         </div>
 
         <div class="welcome-user-container">
-            <p id="welcome">Loading..</p>
 
+            <div class="img-cont"><img src=""></div>
+
+            <p id="welcome">Loading..</p>
             <p id="account-balance">Money: Loading..</p>
             
             <button type="submit" class="admin-btn">Admin Control -></button>
-            
             <button type="submit" class="settings-btn">Settings -></button>
-
             <form action="/logout" method="POST">
                 <button type="submit" class="logout">Logout -></button>
             </form>

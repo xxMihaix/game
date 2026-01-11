@@ -40,7 +40,7 @@ body{
     position: fixed;
     top: 0px;
     width: 100%;
-    height: 55px;
+    height: 56px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -76,13 +76,30 @@ body{
     border-radius: 25px;
     box-shadow:  0 4px 6px rgba(0,0,0,0.1), 0 10px 20px rgba(0,0,0,0.08);
     max-width: 1000px;
-    height: auto;
+    height: 400px;
     position: fixed;
     color: white;
     font-weight: bold;
     z-index: 10;
     display: none;
     border: 2px solid white;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+@media(max-width: 1200px){
+    .pic-container{
+        width: 80%;
+    }
+}
+
+@media(max-width: 500px){
+    .pic-container{
+        width: 100%;
+        border: none;
+        height: 100%;
+        margin-top: 55px;
+    }
 }
 
 .pic-container.active{
@@ -110,21 +127,67 @@ body{
     cursor: pointer;
 }
 
+@media(max-width: 500px){
+    .close{
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}
+
 .pic-cont-in{
     display: flex;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 10px;
     padding: 20px;
+    overflow-y: scroll;
+    height: 80%;
+    scrollbar-width: thin;
+    scrollbar-color:#196408 #2E7D32;
 }
 
+.pic-cont-in::-webkit-scrollbar {
+    width: 10px;
+}
+
+
 .pic-el{
-    width: 130px;
-    aspect-ratio: 1/1;
+    width: 120px;
+    height: 120px;
     border: 3px solid white;
     border-radius: 50%;
     cursor: pointer;
+}
+
+.pic-el img{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+@media(max-width: 460px){
+    .pic-el{
+        width: 110px;
+        height: 110px;
+    }
+    .pic-cont-in{
+        gap: 10px;
+    }
+}
+
+@media(max-width: 390px){
+    .pic-el{
+        width: 100px;
+        height: 100px;
+    }
+}
+
+@media(max-width: 360px){
+    .pic-el{
+        width:90px;
+        height: 90px;
+    }
 }
 
 /**********************/
@@ -215,6 +278,12 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.img-cont img{
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
 }
 
 .pic{

@@ -1,4 +1,5 @@
 
+import { imgProfile } from './profilepic.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     //securityPage();
@@ -15,8 +16,8 @@ async function securityPage(){
 }
 
 async function navWelcome() {
-    res = await fetch('/session');
-    data = await res.json();
+    const res = await fetch('/session');
+     const data = await res.json();
 
     const navWelcome = document.querySelector('.navbar');
 
@@ -34,7 +35,7 @@ function openClose(){
     const menu = document.querySelector('.pic-container');
 
     open.addEventListener('click', () => {
-        menu.classList.remove('active');
+        menu.classList.add('active');
     })
 
     close.addEventListener('click', () => {
@@ -54,6 +55,38 @@ function goback() {
 
 goback();
 
+
+function renderPic(){
+    const container = document.querySelector('.pic-cont-in');
+    const picImport = imgProfile;
+
+    container.innerHTML = '';
+
+    picImport.forEach((el, index) => {
+        const cont = `<div data-id="${index}" class="pic-el">
+                         <img src="${picImport[index]}">
+                      </div>
+        `;
+
+        container.innerHTML += cont;
+    })
+}
+
+renderPic();
+
+
+async function primaryPic(){
+    const profPic = document.querySelector('.img-cont img');
+    const res = await fetch('/session');
+    const data = await res.json();
+
+    if(data.succes){
+        profPic.src = `${imgProfile[Number(data.profilePic)]}`;
+    }
+}
+
+primaryPic();
+
 async function currentUser(){
     const text = document.querySelector('.name2');
 
@@ -61,12 +94,49 @@ async function currentUser(){
     const data = await res.json();
 
     if(data.succes){
-        text.textContent = `Current name: ${data.username}`
+        text.textContent = `Current name: ${data.username}`;
     }
 }
 
-currentUser()
 
+async function eventPic(){
+
+    document.querySelectorAll('.pic-el').forEach(pic => {
+        pic.addEventListener('click', async () => {
+
+            const picid = pic.dataset.id;
+            console.log(picid);
+
+            const resSession = await fetch('/session');
+            const dataSession = await resSession.json();
+
+            if(dataSession.userid){
+                const userid = dataSession.userid;
+                
+                const res = await fetch('/setPic', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userid, picid })
+                })
+
+                const data = await res.json();
+
+                if(data.success){
+                    document.querySelector('.pic-container').classList.remove('active');
+                    primaryPic();
+                }
+                else{
+                    alert(data.message);
+                }
+            } 
+        })
+    })
+}
+
+eventPic();
+
+
+currentUser()
 
 async function changeUsername() {
     const input = document.querySelector('.input-name');

@@ -50,6 +50,7 @@ app.get('/session', async (req, res) => {
             succes: true, 
             userid: user._id,
             username: user.username,
+            profilePic: user.profilePic,
             money: user.money,
             role: user.role
          })
@@ -63,7 +64,7 @@ app.get('/session', async (req, res) => {
 
 app.post('/register', async (req, res) => {
     try{
-        const { username, password } = req.body;
+        const { username, password, profPicNr } = req.body;
     
     const existUser = await User.findOne( {username: username});
 
@@ -74,9 +75,10 @@ app.post('/register', async (req, res) => {
         })
     
     }else{
+
         const hashedPassword = await bcrypt.hash(password, 10)
 
-        const user = await User.create({username: username, password: hashedPassword})
+        const user = await User.create({username: username, password: hashedPassword, profilePic: profPicNr})
 
         req.session.userid = user._id;
 
@@ -324,6 +326,26 @@ app.post('/newPassword', async (req, res) => {
         return res.status(500).json({ success: false, message: 'Server error' })
     }
 
+})
+
+
+app.post('/setPic', async (req, res) => {
+    const { userid, picid } = req.body;
+
+    try{
+        const user = await User.findById(userid);
+
+        if(!user) res.json({ success: false, message: 'User not found/Session inactive' });
+
+        user.profilePic = picid;
+        await user.save();
+
+        res.json({ success: true, message: 'Succes updated pic' });
+    }
+    catch(err){
+        console.log(err);
+        res.status(500).json({ success: false, message: 'server error' });
+    }
 })
 
 

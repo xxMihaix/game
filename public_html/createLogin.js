@@ -1,3 +1,4 @@
+import { imgProfile } from './profilepic.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     const welcome = document.querySelector('.welcome-user-container');
@@ -6,7 +7,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const gologin = document.querySelector('.gologin button');
     const goregister = document.querySelector('.gocreate button');
-
 
     const res = await fetch('/session');
     const data = await res.json();
@@ -31,9 +31,27 @@ document.addEventListener('DOMContentLoaded', async () => {
         login.style.display = 'none';
         register.style.display = 'none';
     }
-
 })
 
+const img = document.querySelector('.img-cont');
+img.addEventListener('click', () => {
+    window.location.href = 'settings.html';
+})
+
+async function profilePic(){
+    const profPic = document.querySelector('.img-cont img');
+
+    const res = await fetch('/session');
+    const data = await res.json();
+
+    if(data.succes){
+        const nrPic = data.profilePic;
+
+        profPic.src = `${imgProfile[Number(nrPic)]}`;
+    }
+}
+
+profilePic();
 
 const form = document.getElementById('register');
 const message = document.getElementById('user-exist');
@@ -44,10 +62,12 @@ form.addEventListener('submit', async (e) => {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
+    const profPicNr = Math.floor(Math.random() * 15);
+
     const res = await fetch('/register', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({username, password})
+        body: JSON.stringify({username, password, profPicNr})
     });
 
     const data = await res.json();
@@ -59,6 +79,11 @@ form.addEventListener('submit', async (e) => {
         form.reset();
         navWelcome();
         welcome();
+        profilePic();
+        const registerCont = document.querySelector('.create-user-container');
+        const welcomeCont = document.querySelector('.welcome-user-container');
+        registerCont.style.display = 'none';
+        welcomeCont.style.display = 'flex';
     }
     else{
         message.style.color = 'red';
@@ -89,6 +114,7 @@ formLogin.addEventListener('submit', async (e) => {
         form.reset();
         navWelcome();
         welcome();
+        profilePic();
     }
     else{
         messageLogin.style.color = 'red';

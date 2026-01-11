@@ -1,0 +1,20 @@
+
+export const imgProfile = [
+    'images/imgProfile/1.png',
+    'images/imgProfile/2.png',
+    'images/imgProfile/3.png',
+    'images/imgProfile/4.png',
+    'images/imgProfile/5.png',
+    'images/imgProfile/6.png',
+    'images/imgProfile/7.png',
+    'images/imgProfile/8.png',
+    'images/imgProfile/9.png',
+    'images/imgProfile/10.png',
+    'images/imgProfile/11.png',
+    'images/imgProfile/12.png',
+    'images/imgProfile/13.png',
+    'images/imgProfile/14.png',
+    'images/imgProfile/15.png',
+    'images/imgProfile/98.png',
+    'images/imgProfile/99.png',
+]

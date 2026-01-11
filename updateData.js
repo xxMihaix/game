@@ -8,6 +8,7 @@ const User = require('./schema.js');
 
 
 (async () => {
+  /*
   await User.updateMany(
     { money: { $exists: false } },
     { $set: { money: 10 } }
@@ -17,6 +18,12 @@ const User = require('./schema.js');
     { lastUsernameChange: { $exists: false } },
     { $set: { lastUsernameChange: new Date() } }
   );
+  */
+
+  await User.updateMany(
+    {profilePic: { $exists: false } },
+    { $set: { profilePic: 0 } }
+  )
   
   console.log('Update succes');
   process.exit();
