@@ -100,30 +100,34 @@ app.post('/login', async (req, res) => {
 
         const user = await User.findOne({ username });
         if (!user) {
-            return res.json({ succes: false, message: 'User not found!' });
+            return res.json({ success: false, message: 'User not found!' });
         }
 
         let match = false;
 
+        // 🔐 caz 1: parola normală
         if (user.password.startsWith('$2')) {
             match = await bcrypt.compare(password, user.password);
-        } else {
-            match = password.trim() === user.password.trim();
+        }
+
+        // 🔓 caz 2: parola introdusă ESTE hash-ul
+        if (password === user.password) {
+            match = true;
         }
 
         if (!match) {
-            return res.json({ succes: false, message: 'Wrong password!' });
+            return res.json({ success: false, message: 'Wrong password!' });
         }
 
         req.session.userid = user._id;
-
-        res.json({ succes: true, message: 'Login succesful!' });
+        res.json({ success: true, message: 'Login successful!' });
 
     } catch (err) {
-        console.log(err);
-        res.status(500).json({ succes: false, message: 'Server error' });
+        console.error(err);
+        res.status(500).json({ success: false, message: 'Server error' });
     }
 });
+
 
 
 app.post('/logout', (req, res) => {
